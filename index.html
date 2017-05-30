@@ -3,24 +3,38 @@
 <head>
 	<title>Chat App - Node and Sockets</title>
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<link rel="stylesheet" type="text/css" href="styles.css">
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 </head>
 <body>
 
-	<h1>Did this load?</h1>
+	
 
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-12" id="users">
-			</div>
+			<div class="col-sm-offset-3 col-sm-6"><h2 class="text-center">Chat Room</h2></div>
 		</div>
-		<div class="col-sm-12">
-			<button id="send-message" class="btn btn-primary">
-				Click to send message to server
-			</button>
+		<div class="row wrapper">
+			<div class="col-sm-3" id="users">
+				<h4 class="user-heading">Connected Users</h4>
+				<!-- Users will be added here -->
+			</div>
+
+			<div id="messages" class="col-sm-6"></div>
+		
+			<div class="col-sm-offset-3 col-sm-6 text-center message-input">
+				<form id="submit-message">
+					<input type="text" id="new-message" placeholder="Type here..." />
+					<button type="submit" id="send-message" class="btn btn-primary">
+						<!-- Click to send message to server -->
+							Send
+					</button>
+				</form>
+			</div>
 		</div>
 	</div>
 
@@ -31,21 +45,40 @@
 	
 	console.log("Browser JavaScript");
 	var name = prompt("What is your name?");
-	console.log(io);
+	// console.dir(io);
+	// console.log(io);
 	var socketio = io.connect("http://127.0.0.1:8080");
-
 	//Send an event to the server
 	socketio.emit("nameToServer",name);
 
 	socketio.on('newUser',(userName)=>{
 		console.log(userName + " just joined!");
+		setTimeout(function(){$('#messages').append('<p class="welcome text-center">Welcome to Chat</p>')}, 1200);
 		var usersDiv = document.getElementById('users');
-		users.innerHTML += `<div class="col-sm-12">${userName}</div>`;
+		usersDiv.innerHTML += `<div class="col-sm-12">${userName}</div>`;
+
 	});
 
-	$('#send-message').click(function(){
+
+	$('#submit-message').submit(function(event){
+		event.preventDefault();
+		var newMessage = $('#new-message').val();
+		socketio.emit('messageToServer',{
+			newMessage:newMessage,
+			name:name
+		});
 		socketio.emit('sendMessage');
-	})
+	});
+
+
+	// $('#send-message').click(function(){
+	// 	socketio.emit('sendMessage');
+	// });
+
+
+	socketio.on('messageToClient',(message)=>{
+		$('#messages').append(`<p>${message}</p>`);
+	});
 
 </script>
 

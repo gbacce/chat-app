@@ -1,0 +1,61 @@
+#messages {
+	height: 80vh;
+	/*border: 1px solid black;*/
+	padding: 15px 25px;
+/*	background-color: #dfd3a9;*/
+	background-color: white;
+}
+
+body {
+	background-color: #f7f3e9;
+}
+
+.welcome {
+	font-family: Futura, sans-serif;
+}
+
+p {
+	padding: 1px 0px;
+}
+
+h1 {
+	/*font-family: Futura, sans-serif;*/
+}
+
+h3 {
+	/*font-family: Futura, sans-serif;*/
+}
+
+.wrapper {
+	margin-top: 10px;
+}
+
+.message-input {
+	padding: 0px;
+	border: 6px solid black;
+}
+
+input {
+	width: 100%;
+	background-color: #f7f3e9;
+	padding: 6px 4px;
+}
+
+span {
+	font-weight:bold;
+	font-size: 18px;
+	/*color: #5443B6;*/
+}
+
+
+#send-message {
+	display: none;
+}
+
+.welcome {
+	text:;
+}
+
+/*.user-heading {
+	border-bottom: 1px solid black;
+}*/

@@ -31,17 +31,31 @@ var socketio = require("socket.io");
 
 var server = http.createServer((req,res)=>{
 	console.log("Someone connected via HTTP!");
-	fs.readFile('index.html', 'utf-8',(error,data)=>{
-		// console.log(error);
-		// console.log(data);
-		if(error){
-			res.writeHead(500,{'content-type':'text/html'});
-			res.end('Internal Server Error');
-		} else{
-			res.writeHead(200,{'content-type':'text/html'});
-			res.end(data);
-		}
-	})
+
+	if(req.url == '/'){
+		fs.readFile('index.html', 'utf-8',(error,data)=>{
+			if(error){
+				res.writeHead(500,{'content-type':'text/html'});
+				res.end('Internal Server Error');
+			} else{
+				res.writeHead(200,{'content-type':'text/html'});
+				res.end(data);
+			}
+		});
+
+	} else if(req.url == '/styles.css'){
+		fs.readFile('styles.css', 'utf-8',(error,data)=>{
+			if(error) {
+				res.writeHead(500,{'content-type':'text/html'});
+				res.end('Internal Server Error');
+			} else{
+				res.writeHead(200,{'content-type':'text/css'});
+				res.end(data);
+			}			
+		});
+	} else{
+		
+	}
 });
 
 var io = socketio.listen(server);
@@ -54,7 +68,6 @@ io.sockets.on('connect',(socket)=>{
 	// Event Listener //
 	socket.on('nameToServer',(name)=>{
 		console.log(name + " just joined.");
-
 		io.sockets.emit('newUser',name);
 	});
 
@@ -62,13 +75,17 @@ io.sockets.on('connect',(socket)=>{
 		console.log("Someone clicked on the big blue button.");
 	});
 
+	socket.on('messageToServer',(messageObj)=>{
+		io.sockets.emit('messageToClient', `<span>${messageObj.name}</span> &nbsp ${messageObj.newMessage}`);
+	});
+
+
+
 
 });
 
 server.listen(8080);
 console.log("Listening on port 8080");
-
-
 
 
 
